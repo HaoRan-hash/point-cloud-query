@@ -1,4 +1,5 @@
 #include "points_query.h"
+#include <c10/cuda/CUDAGuard.h>
 #include <cmath>
 #include <cstdint>
 
@@ -166,6 +167,8 @@ void knn_launcher(int k,
                   torch::Tensor indices,
                   torch::Tensor square_dis)
 {
+    const at::cuda::OptionalCUDAGuard device_guard(points.device());
+    
     // 配置block和thread
     dim3 thread(THREAD_PER_BLOCK, 1, 1);
     int temp = centroids.size(1) / THREAD_PER_BLOCK + ((centroids.size(1) % THREAD_PER_BLOCK) > 0);
@@ -186,6 +189,8 @@ void ball_query_launcher(int k,
                          torch::Tensor indices,
                          torch::Tensor square_dis)
 {
+    const at::cuda::OptionalCUDAGuard device_guard(points.device());
+    
     // 配置block和thread
     dim3 thread(THREAD_PER_BLOCK, 1, 1);
     int temp = centroids.size(1) / THREAD_PER_BLOCK + ((centroids.size(1) % THREAD_PER_BLOCK) > 0);
