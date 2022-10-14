@@ -82,7 +82,7 @@ __global__ void knn_kernel(int k,
         float x = points[b][i][0];
         float y = points[b][i][1];
         float z = points[b][i][2];
-        float dis = pow((centroid_x - x), 2) + pow((centroid_y - y), 2) + pow((centroid_z - z), 2);
+        float dis = (centroid_x - x) * (centroid_x - x) + (centroid_y - y) * (centroid_y - y) + (centroid_z - z) * (centroid_z - z);
         if (dis < k_dis[0])
         {
             k_dis[0] = dis;
@@ -131,7 +131,7 @@ __global__ void ball_query_kernel(int k,
         float x = points[b][i][0];
         float y = points[b][i][1];
         float z = points[b][i][2];
-        float dis = pow((centroid_x - x), 2) + pow((centroid_y - y), 2) + pow((centroid_z - z), 2);
+        float dis = (centroid_x - x) * (centroid_x - x) + (centroid_y - y) * (centroid_y - y) + (centroid_z - z) * (centroid_z - z);
         if (dis < k_dis[0])
         {
             k_dis[0] = dis;
@@ -145,7 +145,7 @@ __global__ void ball_query_kernel(int k,
     // 将距离大于radius的点筛掉
     for (int i = k - 1; i > 0; i--)
     {
-        if (k_dis[i] <= pow(radius, 2))
+        if (k_dis[i] <= (radius * radius))
             break;
         else 
         {
